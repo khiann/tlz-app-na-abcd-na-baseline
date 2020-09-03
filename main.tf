@@ -32,7 +32,7 @@ module "vpc_label" {
 
 # Networking
 module "vpc_primary" {
-  source = "khiann@github.com:khiann/terraform-aws-vpc.git"
+  source = "github.com/khiann/terraform-aws-vpc"
 
   name                     = "tlz-vpc"
   cidr                     = var.cidr_primary
@@ -51,7 +51,7 @@ module "vpc_primary" {
 
 # Account baseline
 module "account-baseline" {
-  source                 = "khiann@github.com:khiann/terraform-aws-baseline-common.git"
+  source                 = "github.com/khiann/terraform-aws-baseline-common.git"
   account_name           = var.name
   account_type           = var.account_type
   account_id             = var.account_id
@@ -69,21 +69,21 @@ module "account-baseline" {
 }
 
 module "tlz_it_operations" {
-  source            = "khiann@github.com:khiann/terraform-aws-baseline-common.git//modules/iam-tlz_it_operations"
+  source            = "github.com/khiann/terraform-aws-baseline-common/modules/iam-tlz_it_operations"
   okta_provider_arn = module.account-baseline.okta_provider_arn
   deny_policy_arns  = module.account-baseline.deny_policy_arns
   #tags_label_context = module.example-tagging.context
 }
 
 module "tlz_intra_network" {
-  source            = "khiann@github.com:khiann/terraform-aws-baseline-common.git//modules/iam-tlz_intra_network"
+  source            = "github.com/khiann/terraform-aws-baseline-common/modules/iam-tlz_intra_network"
   okta_provider_arn = module.account-baseline.okta_provider_arn
   deny_policy_arns  = module.account-baseline.deny_policy_arns
   #tags_label_context = module.example-tagging.context
 }
 
 module "tlz_admin" {
-  source            = "khiann@github.com:khiann/terraform-aws-baseline-common.git//modules/iam-tlz_admin"
+  source            = "github.com/khiann/terraform-aws-baseline-common/modules/iam-tlz_admin"
   okta_provider_arn = module.account-baseline.okta_provider_arn
   okta_environment  = var.int_environment
   deny_policy_arns  = module.account-baseline.deny_policy_arns
@@ -91,7 +91,7 @@ module "tlz_admin" {
 }
 
 module "tlz_developer" {
-  source            = "khiann@github.com:khiann/terraform-aws-baseline-common.git//modules/iam-tlz_developer"
+  source            = "github.com/khiann/terraform-aws-baseline-common/modules/iam-tlz_developer"
   okta_provider_arn = module.account-baseline.okta_provider_arn
   okta_environment  = var.int_environment
   region            = var.region
@@ -101,20 +101,20 @@ module "tlz_developer" {
 }
 
 module "tlz_developer_ro" {
-  source            = "khiann@github.com:khiann/terraform-aws-baseline-common.git//modules/iam-tlz_developer_ro"
+  source            = "github.com/khiann/terraform-aws-baseline-common/modules/iam-tlz_developer_ro"
   okta_provider_arn = module.account-baseline.okta_provider_arn
   #tags_label_context = module.example-tagging.context
 }
 
 module "iam-user-terraform_svc" {
-  source    = "khiann@github.com:khiann/terraform-aws-baseline-common.git//modules/iam-user-tlz_svc_user"
+  source    = "github.com/khiann/terraform-aws-baseline-common/modules/iam-user-tlz_svc_user"
   user_name = "terraform_svc"
   #tags_label_context = module.example-tagging.context
 }
 
 #TODO: Cirrus-630 needs to hook in with okta to provide actual access. Both SecOps and IR roles
 module "tlz_security_ir" {
-  source            = "khiann@github.com:khiann/terraform-aws-baseline-common.git//modules/iam-policy-securityir"
+  source            = "github.com/khiann/terraform-aws-baseline-common/modules/iam-policy-securityir"
   okta_provider_arn = module.account-baseline.okta_provider_arn
   #tags_label_context = module.example-tagging.outputs.context
 }
